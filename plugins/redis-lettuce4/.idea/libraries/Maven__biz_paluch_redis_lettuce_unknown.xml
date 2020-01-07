@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: biz.paluch.redis:lettuce:unknown">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/biz/paluch/redis/lettuce/unknown/lettuce-unknown.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/biz/paluch/redis/lettuce/unknown/lettuce-unknown-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/biz/paluch/redis/lettuce/unknown/lettuce-unknown-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,10 @@
+serviceTypes:
+    - code: 8211
+      name: 'REDIS_LETTUCE4'
+      desc: 'REDIS'
+      property:
+            terminal: true
+            recordStatistics: true
+      matcher:
+            type: 'exact'
+            code: 310 # redis.io
