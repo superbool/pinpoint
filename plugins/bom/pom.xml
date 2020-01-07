@@ -32,6 +32,7 @@
     <properties>
         <jedis.version>2.4.2</jedis.version>
         <lettuce.version>5.1.2.RELEASE</lettuce.version>
+        <lettuce4.version>4.4.0.Final</lettuce4.version>
         <cassandra.driver.version>2.1.7.1</cassandra.driver.version>
         <dubbo.version>2.5.3</dubbo.version>
         <mongo.driver.version>3.9.0</mongo.driver.version>
@@ -133,6 +134,12 @@
                 <groupId>io.lettuce</groupId>
                 <artifactId>lettuce-core</artifactId>
                 <version>${lettuce.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>biz.paluch.redis</groupId>
+                <artifactId>lettuce</artifactId>
+                <version>${lettuce4.version}</version>
             </dependency>
 
             <dependency>

@@ -56,6 +56,7 @@
         <module>json-lib</module>
         <module>redis</module>
         <module>redis-lettuce</module>
+        <module>redis-lettuce4</module>
         <module>tomcat</module>
         <module>thrift</module>
         <module>user</module>
