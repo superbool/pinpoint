@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, ComponentFactoryResolver, Injector, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { of, Subject, forkJoin } from 'rxjs';
+import { of, Subject, forkJoin, fromEvent } from 'rxjs';
 import { takeUntil, filter, delay } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -147,11 +147,36 @@ export class ScatterChartContainerComponent implements OnInit, OnDestroy {
         });
 
         this.connectStore();
+        this.addEventListener();
     }
 
     ngOnDestroy() {
         this.unsubscribe.next();
         this.unsubscribe.complete();
+    }
+
+    private addEventListener(): void {
+        const visibility$ = fromEvent(document, 'visibilitychange').pipe(
+            takeUntil(this.unsubscribe),
+            filter(() => this.scatterChartMode === ScatterChart.MODE.REALTIME)
+        );
+
+        // visible
+        visibility$.pipe(
+            filter(() => !document.hidden),
+        ).subscribe(() => {
+            // TODO: Consider preserving the data during the previous 10sec
+            this.getScatterData();
+        });
+
+        // hidden
+        visibility$.pipe(
+            filter(() => document.hidden),
+            delay(10000),
+            filter(() => document.hidden),
+        ).subscribe(() => {
+            this.scatterChartDataService.stopLoad();
+        });
     }
 
     private setScatterY() {
@@ -249,20 +274,24 @@ export class ScatterChartContainerComponent implements OnInit, OnDestroy {
     onOpenScatterPage(): void {
         this.analyticsService.trackEvent(TRACKED_EVENT_LIST.GO_TO_FULL_SCREEN_SCATTER);
         if (this.scatterChartMode === ScatterChart.MODE.STATIC) {
-            this.urlRouteManagerService.openPage([
-                UrlPath.SCATTER_FULL_SCREEN_MODE,
-                this.newUrlStateNotificationService.getPathValue(UrlPathId.APPLICATION).getUrlStr(),
-                this.newUrlStateNotificationService.getPathValue(UrlPathId.PERIOD).getValueWithTime(),
-                this.newUrlStateNotificationService.getPathValue(UrlPathId.END_TIME).getEndTime(),
-                this.selectedAgent
-            ]);
+            this.urlRouteManagerService.openPage({
+                path: [
+                    UrlPath.SCATTER_FULL_SCREEN_MODE,
+                    this.newUrlStateNotificationService.getPathValue(UrlPathId.APPLICATION).getUrlStr(),
+                    this.newUrlStateNotificationService.getPathValue(UrlPathId.PERIOD).getValueWithTime(),
+                    this.newUrlStateNotificationService.getPathValue(UrlPathId.END_TIME).getEndTime(),
+                    this.selectedAgent
+                ]
+            });
         } else {
-            this.urlRouteManagerService.openPage([
-                UrlPath.SCATTER_FULL_SCREEN_MODE,
-                UrlPathId.REAL_TIME,
-                this.newUrlStateNotificationService.getPathValue(UrlPathId.APPLICATION).getUrlStr(),
-                this.selectedAgent
-            ]);
+            this.urlRouteManagerService.openPage({
+                path: [
+                    UrlPath.SCATTER_FULL_SCREEN_MODE,
+                    UrlPathId.REAL_TIME,
+                    this.newUrlStateNotificationService.getPathValue(UrlPathId.APPLICATION).getUrlStr(),
+                    this.selectedAgent
+                ]
+            });
         }
     }
 
@@ -305,19 +334,25 @@ export class ScatterChartContainerComponent implements OnInit, OnDestroy {
         this.analyticsService.trackEvent(TRACKED_EVENT_LIST.OPEN_TRANSACTION_LIST);
         let returnOpenWindow;
         if (this.newUrlStateNotificationService.isRealTimeMode()) {
-            returnOpenWindow = this.urlRouteManagerService.openPage([
-                UrlPath.TRANSACTION_LIST,
-                this.newUrlStateNotificationService.getPathValue(UrlPathId.APPLICATION).getUrlStr(),
-                this.webAppSettingDataService.getSystemDefaultPeriod().getValueWithTime(),
-                EndTime.newByNumber(this.currentRange.to).getEndTime(),
-            ], `${this.selectedApplication}|${params.x.from}|${params.x.to}|${params.y.from}|${params.y.to}|${this.selectedAgent}|${params.type.join(',')}`);
+            returnOpenWindow = this.urlRouteManagerService.openPage({
+                path: [
+                    UrlPath.TRANSACTION_LIST,
+                    this.newUrlStateNotificationService.getPathValue(UrlPathId.APPLICATION).getUrlStr(),
+                    this.webAppSettingDataService.getSystemDefaultPeriod().getValueWithTime(),
+                    EndTime.newByNumber(this.currentRange.to).getEndTime(),
+                ],
+                metaInfo: `${this.selectedApplication}|${params.x.from}|${params.x.to}|${params.y.from}|${params.y.to}|${this.selectedAgent}|${params.type.join(',')}`
+            });
         } else {
-            returnOpenWindow = this.urlRouteManagerService.openPage([
-                UrlPath.TRANSACTION_LIST,
-                this.newUrlStateNotificationService.getPathValue(UrlPathId.APPLICATION).getUrlStr(),
-                this.newUrlStateNotificationService.getPathValue(UrlPathId.PERIOD).getValueWithTime(),
-                this.newUrlStateNotificationService.getPathValue(UrlPathId.END_TIME).getEndTime()
-            ], `${this.selectedApplication}|${params.x.from}|${params.x.to}|${params.y.from}|${params.y.to}|${this.selectedAgent}|${params.type.join(',')}`);
+            returnOpenWindow = this.urlRouteManagerService.openPage({
+                path: [
+                    UrlPath.TRANSACTION_LIST,
+                    this.newUrlStateNotificationService.getPathValue(UrlPathId.APPLICATION).getUrlStr(),
+                    this.newUrlStateNotificationService.getPathValue(UrlPathId.PERIOD).getValueWithTime(),
+                    this.newUrlStateNotificationService.getPathValue(UrlPathId.END_TIME).getEndTime()
+                ],
+                metaInfo: `${this.selectedApplication}|${params.x.from}|${params.x.to}|${params.y.from}|${params.y.to}|${this.selectedAgent}|${params.type.join(',')}`
+            });
         }
         if (returnOpenWindow === null || returnOpenWindow === undefined) {
             this.showBlockMessagePopup = true;

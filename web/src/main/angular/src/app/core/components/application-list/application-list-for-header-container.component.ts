@@ -35,7 +35,7 @@ export class ApplicationListForHeaderContainerComponent implements OnInit, After
         FAVORITE_LIST_TITLE: '',
         APPLICATION_LIST_TITLE: '',
         INPUT_APPLICATION_NAME: '',
-        SELECTED_APPLICATION_NAME: '',
+        SELECT_APPLICATION: '',
         EMPTY_LIST: ''
     };
     showTitle = true;
@@ -99,7 +99,7 @@ export class ApplicationListForHeaderContainerComponent implements OnInit, After
             this.storeHelperService.getFavoriteApplicationList(this.unsubscribe)
         ).subscribe((responseData: any[]) => {
             this.refreshList(responseData[0], responseData[1]);
-            this.showLoading = true;
+            this.showLoading = false;
             this.cd.detectChanges();
         });
     }
@@ -124,12 +124,12 @@ export class ApplicationListForHeaderContainerComponent implements OnInit, After
             this.translateService.get('MAIN.APP_LIST'),
             this.translateService.get('MAIN.FAVORITE_APP_LIST'),
             this.translateService.get('COMMON.SELECT_YOUR_APP'),
-            this.translateService.get('COMMON.EMPTY')
+            this.translateService.get('COMMON.EMPTY_ON_SEARCH')
         ).subscribe((i18n: string[]) => {
             this.i18nText.INPUT_APPLICATION_NAME = i18n[0];
             this.i18nText.APPLICATION_LIST_TITLE = i18n[1];
             this.i18nText.FAVORITE_LIST_TITLE = i18n[2];
-            this.i18nText.SELECTED_APPLICATION_NAME = i18n[3];
+            this.i18nText.SELECT_APPLICATION = i18n[3];
             this.i18nText.EMPTY_LIST = i18n[4];
         });
     }
@@ -148,7 +148,7 @@ export class ApplicationListForHeaderContainerComponent implements OnInit, After
             this.selectedAppIcon = this.funcImagePath(this.selectedApplication.getServiceType());
             this.selectedAppName = this.selectedApplication.getApplicationName();
         } else {
-            this.selectedAppName = this.i18nText.SELECTED_APPLICATION_NAME;
+            this.selectedAppName = this.i18nText.SELECT_APPLICATION;
         }
     }
 
@@ -238,11 +238,8 @@ export class ApplicationListForHeaderContainerComponent implements OnInit, After
 
     onReload(): void {
         this.analyticsService.trackEvent(TRACKED_EVENT_LIST.CLICK_RELOAD_APPLICATION_LIST_BUTTON);
-        this.showLoading = false;
-        // this.refreshList([], []);
-        this.applicationListDataService.getApplicationList().subscribe(() => {
-            this.showLoading = true;
-        });
+        this.showLoading = true;
+        this.applicationListDataService.getApplicationList().subscribe(() => {});
     }
 
     private isArrowKey(key: number): boolean {

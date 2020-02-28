@@ -16,11 +16,11 @@ package com.navercorp.pinpoint.bootstrap;
 
 import com.navercorp.pinpoint.ProductInfo;
 import com.navercorp.pinpoint.bootstrap.agentdir.AgentDirectory;
+import com.navercorp.pinpoint.bootstrap.agentdir.Assert;
 import com.navercorp.pinpoint.bootstrap.classloader.PinpointClassLoaderFactory;
 import com.navercorp.pinpoint.bootstrap.classloader.ProfilerLibs;
 import com.navercorp.pinpoint.bootstrap.config.DefaultProfilerConfig;
 import com.navercorp.pinpoint.bootstrap.config.ProfilerConfig;
-import com.navercorp.pinpoint.bootstrap.config.Profiles;
 import com.navercorp.pinpoint.bootstrap.config.PropertyLoader;
 import com.navercorp.pinpoint.bootstrap.config.PropertyLoaderFactory;
 import com.navercorp.pinpoint.common.Version;
@@ -28,7 +28,6 @@ import com.navercorp.pinpoint.common.util.PropertySnapshot;
 import com.navercorp.pinpoint.common.util.SimpleProperty;
 import com.navercorp.pinpoint.common.util.SystemProperty;
 
-import java.io.File;
 import java.lang.instrument.Instrumentation;
 import java.net.URL;
 import java.security.AccessController;
@@ -70,31 +69,29 @@ class PinpointStarter {
 //        if (bootstrapClassLoader == null) {
 //            throw new NullPointerException("bootstrapClassLoader");
 //        }
-        if (agentArgs == null) {
-            throw new NullPointerException("agentArgs");
-        }
-        if (agentDirectory == null) {
-            throw new NullPointerException("agentDirectory");
-        }
-        if (instrumentation == null) {
-            throw new NullPointerException("instrumentation");
-        }
-        this.agentArgs = agentArgs;
+        this.agentArgs = Assert.requireNonNull(agentArgs, "agentArgs");
         this.parentClassLoader = parentClassLoader;
-        this.agentDirectory = agentDirectory;
-        this.instrumentation = instrumentation;
+        this.agentDirectory = Assert.requireNonNull(agentDirectory, "agentDirectory");
+        this.instrumentation = Assert.requireNonNull(instrumentation, "instrumentation");
         this.moduleBootLoader = moduleBootLoader;
 
     }
 
 
     boolean start() {
+        final AgentIds agentIds = resolveAgentIds();
+        if (agentIds == null) {
+            return false;
+        }
+
         final IdValidator idValidator = new IdValidator();
-        final String agentId = idValidator.getAgentId();
+        idValidator.validate(agentIds);
+
+        final String agentId = agentIds.getAgentId();
         if (agentId == null) {
             return false;
         }
-        final String applicationName = idValidator.getApplicationName();
+        final String applicationName = agentIds.getApplicationName();
         if (applicationName == null) {
             return false;
         }
@@ -120,7 +117,7 @@ class PinpointStarter {
             }
 
             final String bootClass = getBootClass();
-            AgentBootLoader agentBootLoader = new AgentBootLoader(bootClass, urls, agentClassLoader);
+            AgentBootLoader agentBootLoader = new AgentBootLoader(bootClass, agentClassLoader);
             logger.info(String.format("pinpoint agent [%s] starting...", bootClass));
 
             final List<String> pluginJars = agentDirectory.getPlugins();
@@ -136,6 +133,14 @@ class PinpointStarter {
             return false;
         }
         return true;
+    }
+
+    private AgentIds resolveAgentIds() {
+        AgentIdResolverBuilder builder = new AgentIdResolverBuilder();
+        builder.addAgentArgument(agentArgs);
+        builder.addSystemProperties(System.getProperties());
+        AgentIdResolver agentIdResolver = builder.build();
+        return agentIdResolver.resolve();
     }
 
     private Properties loadProperties() {

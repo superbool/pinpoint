@@ -38,13 +38,6 @@
         -->
     </repositories>
 
-    <pluginRepositories>
-        <pluginRepository>
-            <id>central</id>
-            <name>Maven central plugin repository</name>
-            <url>http://repo1.maven.org/maven2/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <modules>
         <module>annotations</module>
@@ -108,7 +101,7 @@
         <thrift.version>0.12.0</thrift.version>
         <ehcache.version>2.6.11</ehcache.version>
         <netty3.version>3.10.6.Final</netty3.version>
-        <netty4.version>4.1.42.Final</netty4.version>
+        <netty4.version>4.1.45.Final</netty4.version>
 
         <!-- maven-plugin -->
         <plugin.compiler.version>3.8.0</plugin.compiler.version>
@@ -1075,6 +1068,8 @@
             <properties>
                 <env>local</env>
                 <spring.profiles.active>local</spring.profiles.active>
+                <!-- skip development environment-->
+                <plugin.animal-sniffer.skip>true</plugin.animal-sniffer.skip>
             </properties>
         </profile>
         <!-- for Release -->

@@ -24,6 +24,7 @@ import { AgentHistogramDataService } from './services/agent-histogram-data.servi
 import { TransactionDetailDataService } from './services/transaction-detail-data.service';
 import { StoreHelperService } from './services/store-helper.service';
 import { UrlValidateGuard } from './services/url-validate.guard';
+import { ThemeService } from './services/theme.service';
 
 import { HeaderLogoComponent } from './components/header-logo';
 import { EmptyContentsComponent, NoneComponent } from './components/empty-contents';
@@ -45,6 +46,7 @@ import { ApplicationListDataService } from './services/application-list-data.ser
 import { SafeStylePipe } from './pipes/safe-style.pipe';
 import { RetryComponent } from './components/retry';
 import { HandleObsPipe } from './pipes/handle-obs.pipe';
+import { PickPropsPipe } from './pipes/pick-props.pipe';
 
 @NgModule({
     declarations: [
@@ -62,6 +64,7 @@ import { HandleObsPipe } from './pipes/handle-obs.pipe';
         SafeStylePipe,
         JSONTextParserPipe,
         HandleObsPipe,
+        PickPropsPipe,
         ContextPopupDirective,
         SplitterDirective,
         SearchInputDirective
@@ -90,6 +93,7 @@ import { HandleObsPipe } from './pipes/handle-obs.pipe';
         SafeStylePipe,
         JSONTextParserPipe,
         HandleObsPipe,
+        PickPropsPipe,
         ContextPopupDirective,
         SplitterDirective,
         SearchInputDirective
@@ -123,7 +127,8 @@ export class SharedModule {
                 MessageQueueService,
                 DynamicPopupService,
                 ApplicationListResolverService,
-                ApplicationListDataService
+                ApplicationListDataService,
+                ThemeService
             ]
         };
     }

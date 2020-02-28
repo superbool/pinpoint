@@ -27,7 +27,7 @@
 }
 .l-pinpoint-user-search {
     position: relative;
-    padding: 10px 15px;
+    padding: 11px;
     border-bottom: 1px solid #e5e8f0;
     color: #b3b3b4;
 }
@@ -42,12 +42,12 @@
     font-size: 13px;
 }
 .l-search-input:focus {
-    border: 1px solid #469ae4;
-    box-shadow: 0 0 1px 0px #469ae4;
+    border: 1px solid var(--primary-color);
+    box-shadow: 0 0 1px 0px var(--primary-color);
 }
 .l-search-button {
     position: absolute;
-    right: 25px;
+    right: 18px;
     top: 50%;
     transform: translateY(-50%);
     font-size: 18px;
@@ -56,4 +56,10 @@
 .btn {
     padding: 0 9px;
     border-radius: 2px;
+}
+
+.l-empty-text {
+    padding: 12px 15px;
+    font-weight: normal;
+    font-size: 14px;
 }

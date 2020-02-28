@@ -8,9 +8,9 @@ import { ApplicationListForHeaderComponent } from './application-list-for-header
 import { ApplicationListForConfigurationContainerComponent } from './application-list-for-configuration-container.component';
 import { ApplicationListForConfigurationComponent } from './application-list-for-configuration.component';
 import { FavoriteApplicationListForConfigurationContainerComponent } from './favorite-application-list-for-configuration-container.component';
-import { FavoriteApplicationListForConfigurationComponent } from './favorite-application-list-for-configuration.component';
 import { ApplicationListForConfigurationAlarmContainerComponent } from './application-list-for-configuration-alarm-container.component';
 import { ApplicationListInteractionForConfigurationService } from './application-list-interaction-for-configuration.service';
+import { ApplicationListForAgentManagementContainerComponent } from './application-list-for-agent-management-container.component';
 
 @NgModule({
     declarations: [
@@ -18,9 +18,9 @@ import { ApplicationListInteractionForConfigurationService } from './application
         ApplicationListForHeaderComponent,
         ApplicationListForConfigurationContainerComponent,
         ApplicationListForConfigurationComponent,
-        FavoriteApplicationListForConfigurationComponent,
         FavoriteApplicationListForConfigurationContainerComponent,
-        ApplicationListForConfigurationAlarmContainerComponent
+        ApplicationListForConfigurationAlarmContainerComponent,
+        ApplicationListForAgentManagementContainerComponent
     ],
     imports: [
         ScrollingModule,
@@ -30,7 +30,8 @@ import { ApplicationListInteractionForConfigurationService } from './application
         ApplicationListForHeaderContainerComponent,
         ApplicationListForConfigurationContainerComponent,
         FavoriteApplicationListForConfigurationContainerComponent,
-        ApplicationListForConfigurationAlarmContainerComponent
+        ApplicationListForConfigurationAlarmContainerComponent,
+        ApplicationListForAgentManagementContainerComponent
     ],
     providers: [
         ApplicationListInteractionForConfigurationService,

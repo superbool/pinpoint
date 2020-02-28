@@ -3,14 +3,14 @@ li {
     /* height: 28px; */
     margin: 0;
     cursor: pointer;
-    padding: 6px 17px;
+    padding: 12px 15px;
     font-size: 13px;    
 }
 li:hover {
-    background:#fff0f0;
+    background:#e4f3eb;
 }
 li.selected {
-    background:#fff0f0;
+    background:#e4f3eb;
 }
 .item-wrapper {
     display: block;
@@ -23,9 +23,13 @@ li.selected {
 }
 .item-wrapper .fa-trash-alt {
     color: #b3b6bf;
-    font-size: 14px;
+    font-size: 15px;
 }
 .item-wrapper .fa-check {
     color: #F00;
     margin-left: 10px;
+    font-size: 14px;
+}
+.fa-arrow-left {
+    font-size: 14px;
 }

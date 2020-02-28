@@ -159,7 +159,7 @@ export class RealTimeContainerComponent implements OnInit, AfterViewInit, OnDest
         // hidden
         visibility$.pipe(
             filter(() => document.hidden),
-            delay(60000),
+            delay(10000),
             filter(() => document.hidden),
         ).subscribe(() => {
             this.realTimeWebSocketService.close();
@@ -242,12 +242,16 @@ export class RealTimeContainerComponent implements OnInit, AfterViewInit, OnDest
     }
 
     onOpenPage(page: number): void {
-        this.urlRouteManagerService.openPage([
-            UrlPath.REAL_TIME,
-            this.newUrlStateNotificationService.getPathValue(UrlPathId.APPLICATION).getUrlStr(),
-            '' + page,
-            `?activeOnly=${this.activeOnly}`
-        ]);
+        this.urlRouteManagerService.openPage({
+            path: [
+                UrlPath.REAL_TIME,
+                this.newUrlStateNotificationService.getPathValue(UrlPathId.APPLICATION).getUrlStr(),
+                '' + page
+            ],
+            queryParam: {
+                activeOnly: this.activeOnly
+            }
+        });
     }
 
     onChangeActiveOnlyToggle(activeOnly: boolean): void {
@@ -256,12 +260,14 @@ export class RealTimeContainerComponent implements OnInit, AfterViewInit, OnDest
 
     onOpenThreadDump(agentId: string): void {
         this.analyticsService.trackEvent(TRACKED_EVENT_LIST.OPEN_THREAD_DUMP);
-        this.urlRouteManagerService.openPage([
-            UrlPath.THREAD_DUMP,
-            this.newUrlStateNotificationService.getPathValue(UrlPathId.APPLICATION).getUrlStr(),
-            agentId,
-            '' + Date.now()
-        ]);
+        this.urlRouteManagerService.openPage({
+            path: [
+                UrlPath.THREAD_DUMP,
+                this.newUrlStateNotificationService.getPathValue(UrlPathId.APPLICATION).getUrlStr(),
+                agentId,
+                '' + Date.now()
+            ]
+        });
     }
 
     onShowHelp($event: MouseEvent): void {

@@ -42,7 +42,7 @@ tbody > tr {
 }
 
 .l-color-blue {
-    color: #4b99e3;
+    color: var(--primary-color);
 }
 
 .l-text-bold {
@@ -74,4 +74,8 @@ tbody > tr {
 
 .l-row > table:first-child {
     margin-right: 10px;
+}
+
+.l-input-wrapper {
+    padding: 11px !important;
 }

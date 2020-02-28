@@ -83,7 +83,7 @@ Pinpoint Version | Agent | Collector | Web
 1.7.x  | 6-8  | 8   | 8
 1.8.0  | 6-10 | 8   | 8 
 1.8.1+ | 6-11 | 8   | 8 
-2.0.x  | 6-11 | 8   | 8
+2.0.x  | 6-13 | 8   | 8
 
 HBase compatibility table:
 
@@ -93,7 +93,7 @@ Pinpoint Version | HBase 0.98.x | HBase 1.0.x | HBase 1.2.x | HBase 2.0.x
 1.6.x | not tested | not tested | yes | no
 1.7.x | not tested | not tested | yes | no
 1.8.x | not tested | not tested | yes | no
-2.0.x | not tested | not tested | yes | optional
+2.0.x | not tested | not tested | yes | [optional](https://naver.github.io/pinpoint/hbaseupgrade.html#do-you-like-to-use-hbase-2x-for-pinpoint)
 
 Agent - Collector compatibility table:
 

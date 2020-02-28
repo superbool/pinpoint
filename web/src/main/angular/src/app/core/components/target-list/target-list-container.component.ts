@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy, ComponentFactoryResolver, Injector, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { Subject } from 'rxjs';
+import { Subject, forkJoin } from 'rxjs';
 
-import { UrlPathId } from 'app/shared/models';
+import { UrlPathId, UrlQuery, UrlPath } from 'app/shared/models';
 import { Filter } from 'app/core/models/filter';
 import {
     UrlRouteManagerService,
@@ -16,6 +16,9 @@ import {
 import { ServerMapData } from 'app/core/components/server-map/class/server-map-data.class';
 import { FilterTransactionWizardPopupContainerComponent } from 'app/core/components/filter-transaction-wizard-popup/filter-transaction-wizard-popup-container.component';
 import { SearchInputDirective } from 'app/shared/directives/search-input.directive';
+import { FilterParamMaker } from 'app/core/utils/filter-param-maker';
+import { HintParamMaker } from 'app/core/utils/hint-param-maker';
+import { isEmpty } from 'app/core/utils/util';
 
 @Component({
     selector: 'pp-target-list-container',
@@ -51,7 +54,7 @@ export class TargetListContainerComponent implements OnInit, OnDestroy {
     ) {}
 
     ngOnInit() {
-        this.getI18NText();
+        this.initI18NText();
         this.listenToEmitter();
     }
 
@@ -60,9 +63,13 @@ export class TargetListContainerComponent implements OnInit, OnDestroy {
         this.unsubscribe.complete();
     }
 
-    private getI18NText() {
-        this.translateService.get('COMMON.SEARCH_INPUT').subscribe((txt: string) => {
-            this.i18nText.PLACE_HOLDER = txt;
+    private initI18NText() {
+        forkJoin(
+            this.translateService.get('COMMON.SEARCH_INPUT'),
+            this.translateService.get('COMMON.EMPTY_ON_SEARCH')
+        ).subscribe(([placeholder, emptyText]: string[]) => {
+            this.i18nText.PLACE_HOLDER = placeholder;
+            this.i18nText.EMPTY = emptyText;
         });
     }
 
@@ -97,6 +104,7 @@ export class TargetListContainerComponent implements OnInit, OnDestroy {
             : false;
     }
 
+    // TODO: Refactor
     private gatherTargets(): void {
         const targetList: any[] = [];
 
@@ -131,25 +139,31 @@ export class TargetListContainerComponent implements OnInit, OnDestroy {
 
     onOpenFilter([target]: any): void {
         this.analyticsService.trackEvent(TRACKED_EVENT_LIST.CLICK_FILTER_TRANSACTION);
-        const isBothWas = target.sourceInfo.isWas && target.targetInfo.isWas;
-
-        this.urlRouteManagerService.openPage(
-            this.urlRouteManagerService.makeFilterMapUrl({
-                applicationName: target.filterApplicationName,
-                serviceType: target.filterApplicationServiceTypeName,
-                periodStr: this.newUrlStateNotificationService.getPathValue(UrlPathId.PERIOD).getValueWithAddedWords(),
-                timeStr: this.newUrlStateNotificationService.getPathValue(UrlPathId.END_TIME).getEndTime(),
-                filterStr: this.newUrlStateNotificationService.hasValue(UrlPathId.FILTER) ? this.newUrlStateNotificationService.getPathValue(UrlPathId.FILTER) : '',
-                hintStr: this.newUrlStateNotificationService.hasValue(UrlPathId.HINT) ? this.newUrlStateNotificationService.getPathValue(UrlPathId.HINT) : '',
-                addedFilter: new Filter(
-                    target.sourceInfo.applicationName,
-                    target.sourceInfo.serviceType,
-                    target.targetInfo.applicationName,
-                    target.targetInfo.serviceType
-                ),
-                addedHint: isBothWas ? {[target.targetInfo.applicationName]: target.filterTargetRpcList} : null
-            })
+        const appKey = `${target.filterApplicationName}@${target.filterApplicationServiceTypeName}`;
+        const period = this.newUrlStateNotificationService.getPathValue(UrlPathId.PERIOD).getValueWithAddedWords();
+        const endTime = this.newUrlStateNotificationService.getPathValue(UrlPathId.END_TIME).getEndTime();
+        const currFilterStr = this.newUrlStateNotificationService.hasValue(UrlQuery.FILTER) ? this.newUrlStateNotificationService.getQueryValue(UrlQuery.FILTER) : '';
+        const addedFilter = new Filter(
+            target.sourceInfo.applicationName,
+            target.sourceInfo.serviceType,
+            target.targetInfo.applicationName,
+            target.targetInfo.serviceType
         );
+        const currHintStr = this.newUrlStateNotificationService.hasValue(UrlQuery.HINT) ? this.newUrlStateNotificationService.getQueryValue(UrlQuery.HINT) : '';
+        const addedHint = target.sourceInfo.isWas && target.targetInfo.isWas ? {[target.targetInfo.applicationName]: target.filterTargetRpcList} : null;
+
+        this.urlRouteManagerService.openPage({
+            path: [
+                UrlPath.FILTERED_MAP,
+                appKey,
+                period,
+                endTime
+            ],
+            queryParam: {
+                filter: FilterParamMaker.makeParam(currFilterStr, addedFilter),
+                hint: HintParamMaker.makeParam(currHintStr, addedHint)
+            }
+        });
     }
 
     getRequestSum(): number  {
@@ -167,6 +181,10 @@ export class TargetListContainerComponent implements OnInit, OnDestroy {
             resolver: this.componentFactoryResolver,
             injector: this.injector
         });
+    }
+
+    isEmpty(): boolean {
+        return isEmpty(this.targetList);
     }
 
     onCancel(): void {

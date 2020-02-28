@@ -72,6 +72,7 @@ import static com.navercorp.pinpoint.common.trace.ServiceTypeProperty.*;
  * <tr><td>1401</td><td>NODE_METHOD</td></tr>
  * <tr><td>1500</td><td>PHP</td></tr>
  * <tr><td>1501</td><td>PHP_METHOD</td></tr>
+ * <tr><td>1550</td><td>ENVOY</td></tr>
  * <tr><td>1620</td><td>OPENWHISK_INTERNAL</td></tr>
  * <tr><td>1621</td><td>OPENWHISK_CONTROLLER</td></tr>
  * <tr><td>1622</td><td>OPENWHISK_INVOKER</td></tr>
@@ -91,6 +92,8 @@ import static com.navercorp.pinpoint.common.trace.ServiceTypeProperty.*;
  * <tr><td>2151</td><td>MARIADB_EXECUTE_QUERY</td></tr>
  * <tr><td>2200</td><td>MSSQL</td></tr>
  * <tr><td>2201</td><td>MSSQL_EXECUTE_QUERY</td></tr>
+ * <tr><td>2250</td><td>MSSQL_JDBC</td></tr>
+ * <tr><td>2251</td><td>MSSQL_JDBC_QUERY</td></tr> *
  * <tr><td>2300</td><td>ORACLE</td></tr>
  * <tr><td>2301</td><td>ORACLE_EXECUTE_QUERY</td></tr>
  * <tr><td>2400</td><td>CUBRID</td></tr>
@@ -104,6 +107,7 @@ import static com.navercorp.pinpoint.common.trace.ServiceTypeProperty.*;
  * <tr><td>2601</td><td>CASSANDRA_EXECUTE_QUERY</td></tr>
  * <tr><td>2650</td><td>MONGO</td></tr>
  * <tr><td>2651</td><td>MONGO_EXECUTE_QUERY</td></tr>
+ * <tr><td>2652</td><td>MONGO_REACTIVE</td></tr>
  * <tr><td>2700</td><td>COUCHDB</td></tr>
  * <tr><td>2701</td><td>COUCHDB_EXECUTE_QUERY</td></tr>
  * </table>
@@ -211,6 +215,8 @@ import static com.navercorp.pinpoint.common.trace.ServiceTypeProperty.*;
  * <tr><td>9162</td><td>GRPC_SERVER_INTERNAL</td></tr>
  * <tr><td>9201</td><td>ElasticsearchBBoss</td></tr>
  * <tr><td>9202</td><td>ElasticsearchBBossExecutor</td></tr>
+ * <tr><td>9301</td><td>ENVOY_INGRESS</td></tr>
+ * <tr><td>9302</td><td>ENVOY_EGRESS</td></tr>
  * <tr><td>9622</td><td>OPENWHISK_CLIENT</td></tr>
  *
  * </table>

@@ -9,9 +9,12 @@
     "build": "ng build pinpoint",
     "build:real": "ng build pinpoint --prod",
     "build:watch": "ng build pinpoint --watch",
+    "build:forProxy": "ng build pinpoint --outputPath='./dist' --watch",
     "test": "ng test pinpoint",
     "lint": "ng lint pinpoint --type-check",
-    "e2e": "ng e2e pinpoint"
+    "e2e": "ng e2e pinpoint",
+    "copy": "cpx './dist/**' '../../../target/deploy'",
+    "copy:watch": "cpx './dist/**' '../../../target/deploy' --watch"
   },
   "private": true,
   "dependencies": {
@@ -34,7 +37,6 @@
     "ag-grid-community": "^22.0.0",
     "angular-2-local-storage": "^3.0.2",
     "billboard.js": "^1.10.2",
-    "chart.js": "2.8.0",
     "core-js": "^3.2.1",
     "cytoscape": "^3.12.1",
     "cytoscape-dagre": "^2.2.2",
@@ -52,17 +54,17 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.803.21",
-    "@angular/cli": "^8.3.21",
+    "@angular-devkit/build-angular": "^0.803.22",
+    "@angular/cli": "^8.3.22",
     "@angular/compiler-cli": "~8.2.3",
     "@angular/language-service": "~8.2.3",
-    "@types/chart.js": "^2.8.4",
     "@types/jasmine": "~3.4.0",
     "@types/jasminewd2": "~2.0.6",
     "@types/moment-timezone": "^0.5.12",
     "@types/node": "~12.7.2",
     "@types/snapsvg": "^0.5.0",
     "codelyzer": "^5.0.1",
+    "cpx": "^1.5.0",
     "jasmine-core": "~3.4.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "~4.2.0",
