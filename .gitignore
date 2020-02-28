@@ -29,3 +29,4 @@ jsdoc/
 
 # FE local build dir
 dist/
+/plugins/redis-lettuce4/.idea/
